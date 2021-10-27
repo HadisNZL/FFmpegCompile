@@ -1,0 +1,79 @@
+*****ffmpeg 相关*****
+
+1//osx系统下通过ffmpeg查看设备
+
+ffmpeg -f avfoundation -list_devices true -i ""
+.e.g
+[AVFoundation indev @ 0x7fdc9e806300] AVFoundation video devices:
+[AVFoundation indev @ 0x7fdc9e806300] [0] FaceTime高清摄像头（内建）
+[AVFoundation indev @ 0x7fdc9e806300] [1] Capture screen 0
+[AVFoundation indev @ 0x7fdc9e806300] [2] Capture screen 1
+[AVFoundation indev @ 0x7fdc9e806300] AVFoundation audio devices:
+[AVFoundation indev @ 0x7fdc9e806300] [0] ByteviewAudioDevice
+[AVFoundation indev @ 0x7fdc9e806300] [1] 外置麦克风
+[AVFoundation indev @ 0x7fdc9e806300] [2] MacBook Pro麦克风
+
+
+2//推流摄像头（这里“0”通过查看设备找到对应index）
+
+ffmpeg -f avfoundation -framerate 30 -video_size 1280x720 -i  "0"  -vcodec libx264 -acodec libfaac -f flv rtmp://192.168.201.47:1935/italkbb/aijia
+
+3//只推流麦克风
+
+ffmpeg -f avfoundation -i ":0" -vcodec libx264 -preset ultrafast -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://192.168.201.47:1935/italkbb/aijia
+
+4//摄像头+麦克分
+
+ffmpeg -f avfoundation -framerate 30 -video_size 1280x720 -i "0:0" -vcodec libx264 -preset ultrafast -acodec libmp3lame -ar 44100 -ac 1 -f flv rtmp://192.168.201.47:1935/italkbb/aijia
+
+5//推流桌面 - 只有桌面内容
+
+ffmpeg -f avfoundation -i "1" -vcodec libx264 -preset ultrafast -acodec libfaac -f flv rtmp://192.168.201.47:1935/italkbb/aijia
+
+***************************
+
+6//本地文件推流
+
+ffmpeg -re -i /Users/niuzilin/Downloads/videodemo.mp4 -vcodec copy -f flv rtmp://192.168.201.93:1935/italkbb/aijia
+
+ffmpeg -re -stream_loop -1 -i /Users/niuzilin/Downloads/videodemo.mp4 -vcodec copy -acodec copy -f flv rtmp://192.168.200.41:1935/italkbb/aijia
+
+
+https://blog.csdn.net/jeffasd/article/details/71205664?utm_source=blogxgwz0
+
+
+ffmpeg抽流
+
+方法一：
+ffmpeg -i only2.mov -c copy only2.h264 
+
+方法二：
+ffmpeg -i my_funny_video.mp4 -vcodec copy -vbsf h264_mp4toannexb -an my_funny_video.h264
+
+
+h264分析工具 h264bitstream
+
+安装命令：
+brew install h264bitstream
+
+输出  bitsStream SPS/PPS  log
+h264_analyze test.mov >> test.txt
+
+
+
+
+1⃣️减小FFmpeg编译包体积：
+https://blog.csdn.net/TuGeLe/article/details/86530968
+
+2⃣️一键编译FFmpeg多个库：
+https://blog.csdn.net/bobcat_kay/article/details/88843778
+脚本 build_multi_so.sh
+
+3⃣️一键编译FFmpeg整合成一个库
+https://github.com/xufuji456/FFmpegAndroid
+脚本 build_one_so.sh
+
+
+
+
+
