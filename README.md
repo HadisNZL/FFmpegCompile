@@ -1,1 +1,4 @@
-# FFmpegCompile
+# 😊基于FFmpeg分支release4.0源码编译，可以多so，可以单so
+# 扩展功能
+# 1、编码支持x264（可以删除）
+# 2、支持功能扩展
